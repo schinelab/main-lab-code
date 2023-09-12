@@ -1,0 +1,19 @@
+/.idea
+/tests
+/.ipynb_checkpoints
+*.log
+*.pkl
+/sandbox
+*.svg
+*.pdf
+*.png
+
+#virtual environment
+venv/
+
+#pycache
+__pycache__/
+*.py[cod]
+.DS_Store
+/Re-build
+/data/MOT_SIM.db
