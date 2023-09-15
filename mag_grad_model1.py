@@ -12,7 +12,7 @@ mu0 = cts.mu_0
 INCHES_TO_METERS = 0.0254
 
 WIRE_GAUGE = "10"
-DISTANCE_BETWEEN_COILS = (4.800)*INCHES_TO_METERS
+DISTANCE_BETWEEN_COILS = (4.800+1)*INCHES_TO_METERS
 Z_OFFSET_TOP_COIL = (DISTANCE_BETWEEN_COILS/2)*INCHES_TO_METERS
 Z_OFFSET_BOTTOM_COIL = -(DISTANCE_BETWEEN_COILS/2)*INCHES_TO_METERS
 CURRENT_SINGLE_LOOP = 1
@@ -50,20 +50,32 @@ mag_field_bot_coil = ring_b_field_axial(L/2+z,current=N*CURRENT_SINGLE_LOOP,radi
 mot_total_b_field = anti_helmholz_congfig(mag_field_top_coil,mag_field_bot_coil)
 
 # the magnetic field gradient, derivative of z function
-dB_dz = np.diff(mot_total_b_field)/(np.diff(z))
+dB_dz = np.diff(mot_total_b_field*10000)/(np.diff(z))
 max_gradient = int(np.max(dB_dz))
 y_pos_text = 0.80*max_gradient
 
+fig = plt.figure()
 plt.title(f"{max_gradient} G/cm using wire gauge {WIRE_GAUGE} and {N} calculated loops",fontsize=10)
 #plt.title(f"Using wire gauge {WIRE_GAUGE} corresponding to {N} calculated loops",fontsize=10)
-plt.plot(z*1e2,mot_total_b_field*10000,'r',label="Magnetic field of the combined coils")
 plt.plot(z[:-1]*1e2,dB_dz,'b',label="Magnetic field gradient of the combined coils")
 plt.text(2.5,y_pos_text,f"Current per wire: {CURRENT_SINGLE_LOOP} A")
 plt.grid()
 plt.xlabel("cm")
-plt.ylabel("Gauss")
+plt.ylabel("G/cm")
 plt.legend()
 plt.show()
+fig.show()
 
+fig = plt.figure()
+plt.title(f"{max_gradient} G/cm using wire gauge {WIRE_GAUGE} and {N} calculated loops",fontsize=10)
+#plt.title(f"Using wire gauge {WIRE_GAUGE} corresponding to {N} calculated loops",fontsize=10)
+plt.plot(z*1e2,mot_total_b_field*10000,'r',label="Magnetic field of the combined coils")
+plt.text(2.5,y_pos_text,f"Current per wire: {CURRENT_SINGLE_LOOP} A")
+plt.grid()
+plt.xlabel("cm")
+plt.ylabel("G")
+plt.legend()
+plt.show()
+fig.show()
 
 print(f"field gradient {max_gradient} in G/cm")
